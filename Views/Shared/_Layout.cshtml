@@ -1,49 +1,75 @@
-﻿<!DOCTYPE html>
+﻿@using Microsoft.AspNetCore.Identity
+@using GiftoftheGivers.Models
+@inject SignInManager<ApplicationUser> SignInManager
+@inject UserManager<ApplicationUser> UserManager
+<!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="utf-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>@ViewData["Title"] - GiftoftheGivers</title>
-    <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>@ViewData["Title"] - Gift of the Givers</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
-    <link rel="stylesheet" href="~/GiftoftheGivers.styles.css" asp-append-version="true" />
 </head>
 <body>
-    <header>
-        <nav class="navbar navbar-expand-sm navbar-toggleable-sm navbar-light bg-white border-bottom box-shadow mb-3">
-            <div class="container-fluid">
-                <a class="navbar-brand" asp-area="" asp-controller="Home" asp-action="Index">GiftoftheGivers</a>
-                <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target=".navbar-collapse" aria-controls="navbarSupportedContent"
-                        aria-expanded="false" aria-label="Toggle navigation">
-                    <span class="navbar-toggler-icon"></span>
-                </button>
-                <div class="navbar-collapse collapse d-sm-inline-flex justify-content-between">
-                    <ul class="navbar-nav flex-grow-1">
-                        <li class="nav-item">
-                            <a class="nav-link text-dark" asp-area="" asp-controller="Home" asp-action="Index">Home</a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link text-dark" asp-area="" asp-controller="Home" asp-action="Privacy">Privacy</a>
-                        </li>
-                    </ul>
-                </div>
-            </div>
-        </nav>
-    </header>
-    <div class="container">
-        <main role="main" class="pb-3">
-            @RenderBody()
-        </main>
-    </div>
 
-    <footer class="border-top footer text-muted">
-        <div class="container">
-            &copy; 2026 - GiftoftheGivers - <a asp-area="" asp-controller="Home" asp-action="Privacy">Privacy</a>
+    <nav class="nav" id="mainNav">
+        <a asp-controller="Home" asp-action="Index" class="nav-brand" style="text-decoration:none;">
+            <svg width="28" height="28" viewBox="0 0 28 28" fill="none">
+                <circle cx="14" cy="14" r="13" stroke="currentColor" stroke-width="2" />
+                <path d="M8 14c0-3.3 2.7-6 6-6s6 2.7 6 6-2.7 6-6 6" stroke="currentColor" stroke-width="2" stroke-linecap="round" />
+                <circle cx="14" cy="14" r="2" fill="currentColor" />
+            </svg>
+            Gift of the Givers
+        </a>
+        @{
+            var currentController = ViewContext.RouteData.Values["controller"]?.ToString();
+            var currentAction = ViewContext.RouteData.Values["action"]?.ToString();
+            Func<string, string, string> navClass = (ctrl, action) =>
+            currentController == ctrl && currentAction == action ? "active-link" : "";
+        }
+        <div class="nav-links" id="navLinks">
+            <a asp-controller="Home" asp-action="Index" class="@navClass("Home", "Index")">Home</a>
+            <a asp-controller="Home" asp-action="About" class="@navClass("Home", "About")">About</a>
+            <a asp-controller="Donation" asp-action="Create" class="@navClass("Donation", "Create")">Donate</a>
+            <a asp-controller="Volunteer" asp-action="Register" class="@navClass("Volunteer", "Register")">Volunteer</a>
+            <a asp-controller="Home" asp-action="Contact" class="@navClass("Home", "Contact")">Contact</a>
+            <span id="authNav">
+                @if (SignInManager.IsSignedIn(User))
+                {
+                    var user = await UserManager.GetUserAsync(User);
+                    var isEmployee = user != null && await UserManager.IsInRoleAsync(user, Roles.Employee);
+                    <span class="nav-user">
+                        <span class="nav-user-avatar">@(user != null && user.FirstName.Length > 0 ? user.FirstName[0].ToString().ToUpper() : "?")</span>
+                        <a asp-controller="@(isEmployee ? "EmployeeDashboard" : "DonorDashboard")" asp-action="Index" style="font-weight:600;color:var(--text);">@user?.FullName</a>
+                        <form asp-controller="Account" asp-action="Logout" method="post" style="display:inline;">
+                            <button type="submit" class="nav-logout">Logout</button>
+                        </form>
+                    </span>
+                }
+                else
+                {
+                    <a asp-controller="Account" asp-action="Login" class="nav-btn">Login</a>
+                }
+            </span>
         </div>
-    </footer>
-    <script src="~/lib/jquery/dist/jquery.min.js"></script>
-    <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
+        <button class="mobile-toggle" onclick="document.getElementById('navLinks').classList.toggle('open')">☰</button>
+    </nav>
+
+    @RenderBody()
+
+    <div class="toast" id="toast"></div>
+
+    <footer>Gift of the Givers Foundation — Disaster Relief Application Prototype | APPR6312 | ASP.NET Core + Azure</footer>
+
     <script src="~/js/site.js" asp-append-version="true"></script>
+    @{
+        var toastMessage = TempData["Toast"] as string;
+    }
+    @if (!string.IsNullOrEmpty(toastMessage))
+    {
+        <script>showToast(@Html.Raw(System.Text.Json.JsonSerializer.Serialize(toastMessage)));</script>
+    }
     @await RenderSectionAsync("Scripts", required: false)
 </body>
 </html>

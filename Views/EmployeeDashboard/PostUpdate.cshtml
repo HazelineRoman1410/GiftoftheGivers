@@ -1,0 +1,58 @@
+﻿@model GiftoftheGivers.Models.ReliefUpdate
+@{
+    ViewData["Title"] = "Post Relief Update";
+}
+
+<h1>Post a Relief / Emergency Update</h1>
+
+<div class="row">
+    <div class="col-md-6">
+        <form asp-action="PostUpdate" method="post">
+            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+
+            ```
+            <div class="mb-3">
+                <label asp-for="Title" class="form-label"></label>
+                <input asp-for="Title" class="form-control" placeholder="e.g. Emergency water tankers deployed" />
+                <span asp-validation-for="Title" class="text-danger"></span>
+            </div>
+
+            <div class="mb-3">
+                <label asp-for="Project" class="form-label"></label>
+                <input asp-for="Project" class="form-control" placeholder="e.g. KwaZulu-Natal Flood Relief" />
+                <span asp-validation-for="Project" class="text-danger"></span>
+            </div>
+
+            <div class="mb-3">
+                <label asp-for="Content" class="form-label"></label>
+                <textarea asp-for="Content" class="form-control" rows="4" placeholder="Enter the relief or emergency update..."></textarea>
+                <span asp-validation-for="Content" class="text-danger"></span>
+            </div>
+
+            <div class="mb-3">
+                <label asp-for="Priority" class="form-label"></label>
+                <select asp-for="Priority" class="form-select">
+                    <option value="info">Info</option>
+                    <option value="urgent">Urgent</option>
+                    <option value="critical">Critical</option>
+                </select>
+                <span asp-validation-for="Priority" class="text-danger"></span>
+            </div>
+
+            <div class="mb-3">
+                <label asp-for="PostedBy" class="form-label"></label>
+                <input asp-for="PostedBy" class="form-control" />
+                <span asp-validation-for="PostedBy" class="text-danger"></span>
+            </div>
+
+            <button type="submit" class="btn btn-primary">Post Update</button>
+            <a asp-action="Index" class="btn btn-link">Cancel</a>
+        </form>
+    </div>
+    ```
+
+</div>
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+}

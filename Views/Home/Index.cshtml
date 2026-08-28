@@ -1,8 +1,51 @@
 ﻿@{
-    ViewData["Title"] = "Home Page";
+    ViewData["Title"] = "Home";
 }
 
-<div class="text-center">
-    <h1 class="display-4">Welcome</h1>
-    <p>Learn about <a href="https://learn.microsoft.com/aspnet/core">building Web apps with ASP.NET Core</a>.</p>
+<div class="page active">
+    <section class="hero">
+        <div class="hero-inner">
+            <div class="hero-grid">
+                <div>
+                    <div class="hero-eyebrow">Disaster Relief Coordination</div>
+                    <h1>Help where it matters most.</h1>
+                    <p class="hero-desc">A centralised platform connecting donations, volunteers, and relief-project updates for the Gift of the Givers Foundation.</p>
+                    <div class="hero-actions">
+                        <a asp-controller="Donation" asp-action="Create" class="btn btn-primary">Donate Now</a>
+                        <a asp-controller="Volunteer" asp-action="Register" class="btn btn-outline">Become a Volunteer</a>
+                    </div>
+                </div>
+                <div class="pulse-card">
+                    <h3>Relief Pulse</h3>
+                    <div class="pulse-row"><span><span class="pulse-dot"></span>Operations</span><span class="pulse-val">Active</span></div>
+                    <div class="pulse-row"><span>Active Projects</span><span class="pulse-val">@ViewBag.ActiveProjects</span></div>
+                    <div class="pulse-row"><span>Registered Volunteers</span><span class="pulse-val">@ViewBag.RegisteredVolunteers</span></div>
+                    <div class="pulse-row"><span>Donation Progress</span><span class="pulse-val">@ViewBag.DonationProgress</span></div>
+                </div>
+            </div>
+        </div>
+    </section>
+    <section class="section">
+        <div class="section-header">
+            <h2>What We Do</h2>
+            <p>Our platform coordinates emergency response, manages volunteers, and enables transparent donation tracking.</p>
+        </div>
+        <div class="features-grid">
+            <div class="feature-card">
+                <div class="feature-icon">📢</div>
+                <h3>Emergency Updates</h3>
+                <p>Employees post real-time updates about ongoing relief projects and urgent needs across communities.</p>
+            </div>
+            <div class="feature-card">
+                <div class="feature-icon">🤝</div>
+                <h3>Volunteer Coordination</h3>
+                <p>Volunteers register their skills and availability so the organisation can deploy the right people fast.</p>
+            </div>
+            <div class="feature-card">
+                <div class="feature-icon">❤️</div>
+                <h3>Donation Management</h3>
+                <p>Donors can give once-off or recurring donations in ZAR, USD, or EUR with automatic tax certificate generation.</p>
+            </div>
+        </div>
+    </section>
 </div>

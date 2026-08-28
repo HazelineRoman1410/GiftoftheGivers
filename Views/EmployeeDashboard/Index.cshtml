@@ -1,0 +1,148 @@
+﻿@model GiftoftheGivers.Models.EmployeeDashboardViewModel
+@{
+    ViewData["Title"] = "Employee Dashboard";
+}
+
+<div class="page active">
+    <div class="dashboard-layout">
+        <aside class="sidebar">
+            <h3>Dashboard</h3>
+            <div class="sidebar-link tab-link @(Model.ActiveTab == "overview" ? "active" : "")" data-tab="overview" onclick="switchDashTab('overview')">📊 Relief Overview</div>
+            <div class="sidebar-link tab-link @(Model.ActiveTab == "projects" ? "active" : "")" data-tab="projects" onclick="switchDashTab('projects')">📁 Active Projects</div>
+            <div class="sidebar-link tab-link @(Model.ActiveTab == "volunteers" ? "active" : "")" data-tab="volunteers" onclick="switchDashTab('volunteers')">👥 Volunteer Sign-ups</div>
+            <div class="sidebar-link tab-link @(Model.ActiveTab == "updates" ? "active" : "")" data-tab="updates" onclick="switchDashTab('updates')">📝 Emergency Updates</div>
+            <div class="sidebar-link tab-link @(Model.ActiveTab == "post" ? "active" : "")" data-tab="post" onclick="switchDashTab('post')">➕ Post Update</div>
+        </aside>
+        <main class="dash-content">
+
+            <div id="dash-overview" style="display:@(Model.ActiveTab == "overview" ? "block" : "none");">
+                <div class="dash-header"><h2>Relief Overview</h2><p>Current operational status across all active projects.</p></div>
+                <div class="metrics-row">
+                    <div class="metric-card"><small>Active Projects</small><strong>@Model.ActiveProjects</strong></div>
+                    <div class="metric-card"><small>Volunteers</small><strong>@Model.VolunteerCount</strong></div>
+                    <div class="metric-card"><small>Donations Today</small><strong>@Model.DonationsToday</strong></div>
+                    <div class="metric-card"><small>Progress</small><strong>69%</strong></div>
+                </div>
+                <h3 style="font-size:15px; font-weight:700; margin-bottom:12px;">Recent Relief Activities</h3>
+                <table class="data-table">
+                    <thead><tr><th>Project</th><th>Location</th><th>Priority</th><th>Status</th></tr></thead>
+                    <tbody>
+                        <tr><td>Flood Relief</td><td>Eastern Cape</td><td><span class="badge badge-high">High</span></td><td><span class="badge badge-active">Active</span></td></tr>
+                        <tr><td>Food Distribution</td><td>KwaZulu-Natal</td><td><span class="badge badge-medium">Medium</span></td><td><span class="badge badge-active">Active</span></td></tr>
+                        <tr><td>Community Support</td><td>Western Cape</td><td><span class="badge badge-normal">Normal</span></td><td><span class="badge badge-normal">Monitoring</span></td></tr>
+                        <tr><td>Medical Aid</td><td>Limpopo</td><td><span class="badge badge-high">High</span></td><td><span class="badge badge-active">Active</span></td></tr>
+                        <tr><td>Water Supply</td><td>Free State</td><td><span class="badge badge-medium">Medium</span></td><td><span class="badge badge-normal">Planning</span></td></tr>
+                    </tbody>
+                </table>
+            </div>
+
+            <div id="dash-projects" style="display:@(Model.ActiveTab == "projects" ? "block" : "none");">
+                <div class="dash-header"><h2>Active Projects</h2><p>All currently running relief operations.</p></div>
+                <table class="data-table">
+                    <thead><tr><th>Project</th><th>Location</th><th>Start Date</th><th>Budget</th><th>Progress</th></tr></thead>
+                    <tbody>
+                        <tr><td>Eastern Cape Flood Relief</td><td>Eastern Cape</td><td>12 Aug 2026</td><td>R750,000</td><td>69%</td></tr>
+                        <tr><td>KZN Food Distribution</td><td>KwaZulu-Natal</td><td>05 Aug 2026</td><td>R320,000</td><td>45%</td></tr>
+                        <tr><td>Western Cape Community</td><td>Western Cape</td><td>20 Jul 2026</td><td>R180,000</td><td>82%</td></tr>
+                        <tr><td>Limpopo Medical Aid</td><td>Limpopo</td><td>18 Aug 2026</td><td>R500,000</td><td>23%</td></tr>
+                        <tr><td>Free State Water Supply</td><td>Free State</td><td>25 Aug 2026</td><td>R290,000</td><td>8%</td></tr>
+                    </tbody>
+                </table>
+            </div>
+
+            <div id="dash-volunteers" style="display:@(Model.ActiveTab == "volunteers" ? "block" : "none");">
+                <div class="dash-header"><h2>Volunteer Sign-ups</h2><p>People who have registered to help.</p></div>
+                <div class="volunteer-list">
+                    @if (!Model.Volunteers.Any())
+                    {
+                        <p style="color:var(--text-muted); font-size:14px;">No volunteers registered yet.</p>
+                    }
+                    else
+                    {
+                        @foreach (var v in Model.Volunteers)
+                        {
+                            <div class="vol-item">
+                                <div class="vol-avatar">@v.Initials</div>
+                                <div class="vol-info">
+                                    <h4>@v.FullName</h4>
+                                    <p>@v.Email | @v.AvailabilityLabel | Registered @v.DateRegistered.ToString("yyyy-MM-dd")</p>
+                                </div>
+                                <div class="vol-skills">
+                                    @foreach (var skill in v.SkillList)
+                                    {
+                                        <span class="skill-tag">@skill</span>
+                                    }
+                                </div>
+                            </div>
+                        }
+                    }
+                </div>
+            </div>
+
+            <div id="dash-updates" style="display:@(Model.ActiveTab == "updates" ? "block" : "none");">
+                <div class="dash-header"><h2>Emergency Updates</h2><p>Latest updates posted by employees.</p></div>
+                <div class="updates-feed">
+                    @if (!Model.Updates.Any())
+                    {
+                        <p style="color:var(--text-muted); font-size:14px;">No updates posted yet.</p>
+                    }
+                    else
+                    {
+                        @foreach (var u in Model.Updates)
+                        {
+                            <div class="update-item">
+                                <h4>@u.PriorityIcon @u.Title</h4>
+                                <p>@u.Content</p>
+                                <div class="update-meta">@u.Project · @u.DatePosted.ToString("yyyy-MM-dd") · Posted by @u.PostedBy</div>
+                            </div>
+                        }
+                    }
+                </div>
+            </div>
+
+            <div id="dash-post" style="display:@(Model.ActiveTab == "post" ? "block" : "none");">
+                <div class="dash-header"><h2>Post an Update</h2><p>Share relief project updates with the team and public.</p></div>
+                <div style="max-width:560px;">
+                    <form asp-controller="EmployeeDashboard" asp-action="PostUpdate" method="post">
+                        <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+                        <div class="form-group"><label>Update Title</label><input type="text" name="Title" placeholder="e.g. Flood relief supplies delivered"></div>
+                        <div class="form-group">
+                            <label>Related Project</label>
+                            <select name="Project">
+                                <option value="Flood Relief">Eastern Cape Flood Relief</option>
+                                <option value="Food Distribution">KZN Food Distribution</option>
+                                <option value="Community Support">Western Cape Community Support</option>
+                                <option value="Medical Aid">Limpopo Medical Aid</option>
+                            </select>
+                        </div>
+                        <div class="form-group"><label>Update Content</label><textarea name="Content" placeholder="Describe the situation..." style="min-height:120px;"></textarea></div>
+                        <div class="form-group">
+                            <label>Priority Level</label>
+                            <select name="Priority">
+                                <option value="info">Informational</option>
+                                <option value="urgent">Urgent</option>
+                                <option value="critical">Critical</option>
+                            </select>
+                        </div>
+                        <button type="submit" class="form-submit">Publish Update</button>
+                    </form>
+                </div>
+            </div>
+
+        </main>
+    </div>
+</div>
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+    <script>
+        function switchDashTab(tab) {
+            document.querySelectorAll('.tab-link').forEach(l => l.classList.remove('active'));
+            document.querySelector('.tab-link[data-tab="' + tab + '"]').classList.add('active');
+            ['overview','projects','volunteers','updates','post'].forEach(t => {
+                document.getElementById('dash-' + t).style.display = (t === tab) ? 'block' : 'none';
+            });
+            history.replaceState(null, '', '?tab=' + tab);
+        }
+    </script>
+}

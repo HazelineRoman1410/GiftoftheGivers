@@ -1,0 +1,55 @@
+﻿@model GiftoftheGivers.Models.RegisterViewModel
+@{
+    ViewData["Title"] = "Register";
+}
+
+<div class="page active">
+    <div class="form-page">
+        <div class="form-container">
+            <h2>Create an Account</h2>
+            <p class="form-sub">Register as an Employee or Donor.</p>
+            <div class="form-tabs">
+                <a asp-action="Login" class="form-tab" style="text-decoration:none;">Sign In</a>
+                <div class="form-tab active">Register</div>
+            </div>
+
+            <form asp-action="Register" method="post">
+                <div asp-validation-summary="All" class="text-danger" style="margin-bottom:12px;"></div>
+                <div class="form-row">
+                    <div class="form-group">
+                        <label asp-for="FirstName"></label>
+                        <input asp-for="FirstName" placeholder="First name" />
+                        <span asp-validation-for="FirstName" class="text-danger"></span>
+                    </div>
+                    <div class="form-group">
+                        <label asp-for="LastName"></label>
+                        <input asp-for="LastName" placeholder="Last name" />
+                        <span asp-validation-for="LastName" class="text-danger"></span>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label asp-for="Email"></label>
+                    <input asp-for="Email" placeholder="you@email.com" />
+                    <span asp-validation-for="Email" class="text-danger"></span>
+                </div>
+                <div class="form-group">
+                    <label asp-for="Password">Password (min. 6 characters)</label>
+                    <input asp-for="Password" placeholder="Min. 6 characters" />
+                    <span asp-validation-for="Password" class="text-danger"></span>
+                </div>
+                <div class="form-group">
+                    <label asp-for="Role"></label>
+                    <select asp-for="Role">
+                        <option value="Donor">Donor</option>
+                        <option value="Employee">Employee</option>
+                    </select>
+                </div>
+                <button type="submit" class="form-submit">Create Account</button>
+            </form>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+}

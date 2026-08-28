@@ -1,0 +1,108 @@
+﻿@model GiftoftheGivers.Models.Donation
+@{
+    ViewData["Title"] = "Donate";
+}
+
+<div class="page active">
+    <section class="donate-section" id="donateForm">
+        <h2>Make a Donation</h2>
+        <p class="sub">Support disaster relief efforts. Choose your donation type, amount, and currency.</p>
+
+        <form asp-action="Create" method="post" id="donationForm">
+            <div asp-validation-summary="ModelOnly" class="text-danger" style="margin-bottom:12px;"></div>
+
+            <div class="type-toggle">
+                <label class="type-btn @(Model.DonationType == GiftoftheGivers.Models.DonationType.OnceOff ? "selected" : "")">
+                    <input type="radio" asp-for="DonationType" value="OnceOff" style="display:none;" onclick="selectType(this)" /> Once-off
+                </label>
+                <label class="type-btn @(Model.DonationType == GiftoftheGivers.Models.DonationType.Recurring ? "selected" : "")">
+                    <input type="radio" asp-for="DonationType" value="Recurring" style="display:none;" onclick="selectType(this)" /> Monthly Recurring
+                </label>
+            </div>
+
+            <div class="form-group">
+                <label>Select Amount</label>
+                <div class="amount-grid">
+                    <div class="amount-btn" onclick="selectAmount(100)">R100</div>
+                    <div class="amount-btn" onclick="selectAmount(250)">R250</div>
+                    <div class="amount-btn selected" onclick="selectAmount(500)">R500</div>
+                    <div class="amount-btn" onclick="selectAmount(1000)">R1 000</div>
+                    <div class="amount-btn" onclick="selectAmount(2500)">R2 500</div>
+                    <div class="amount-btn" onclick="selectAmount(5000)">R5 000</div>
+                </div>
+            </div>
+
+            <div class="form-row">
+                <div class="form-group">
+                    <label asp-for="Currency"></label>
+                    <select asp-for="Currency" class="form-select">
+                        <option value="ZAR">ZAR (South African Rand)</option>
+                        <option value="USD">USD (US Dollar)</option>
+                        <option value="EUR">EUR (Euro)</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label>Amount</label>
+                    <input asp-for="Amount" type="number" id="amountInput" min="1" step="0.01" />
+                    <span asp-validation-for="Amount" class="text-danger"></span>
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label asp-for="Project"></label>
+                <select asp-for="Project">
+                    <option value="General Relief Fund">General Relief Fund</option>
+                    <option value="Eastern Cape Flood Relief">Eastern Cape Flood Relief</option>
+                    <option value="KwaZulu-Natal Food Distribution">KwaZulu-Natal Food Distribution</option>
+                    <option value="Western Cape Community Support">Western Cape Community Support</option>
+                </select>
+            </div>
+
+            <div class="checkbox-row">
+                <input type="checkbox" asp-for="IsAnonymous" id="anonCheck" />
+                <label for="anonCheck">Donate anonymously (no account required)</label>
+            </div>
+
+            <div id="donorDetailsSection">
+                <div class="form-row">
+                    <div class="form-group">
+                        <label asp-for="DonorName">Full Name</label>
+                        <input asp-for="DonorName" placeholder="Your name" value="" />
+                        <span asp-validation-for="DonorName" class="text-danger"></span>
+                    </div>
+                    <div class="form-group">
+                        <label asp-for="DonorEmail">Email</label>
+                        <input asp-for="DonorEmail" placeholder="you@email.com" />
+                    </div>
+                </div>
+            </div>
+
+            <button type="submit" class="form-submit">Process Donation</button>
+            <p style="text-align:center; margin-top:12px; font-size:12px; color:var(--text-muted);">This is a prototype. No real payment will be processed.</p>
+        </form>
+    </section>
+</div>
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+    <script>
+        const anonCheck = document.getElementById('anonCheck');
+        const donorDetails = document.getElementById('donorDetailsSection');
+        function toggleDonorDetails() {
+            donorDetails.style.display = anonCheck.checked ? 'none' : 'block';
+        }
+        anonCheck.addEventListener('change', toggleDonorDetails);
+        toggleDonorDetails();
+
+        function selectType(radio) {
+            document.querySelectorAll('.type-btn').forEach(b => b.classList.remove('selected'));
+            radio.closest('.type-btn').classList.add('selected');
+        }
+
+        function selectAmount(amt) {
+            document.querySelectorAll('.amount-btn').forEach(b => b.classList.remove('selected'));
+            event.target.classList.add('selected');
+            document.getElementById('amountInput').value = amt;
+        }
+    </script>
+}

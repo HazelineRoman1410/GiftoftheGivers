@@ -1,0 +1,36 @@
+﻿@model IEnumerable<GiftoftheGivers.Models.Volunteer>
+@{
+    ViewData["Title"] = "Volunteer Sign-ups";
+}
+
+<h1>Volunteer Sign-ups</h1>
+<a asp-action="Index" class="btn btn-link mb-3">&larr; Back to Relief Pulse</a>
+
+@if (!Model.Any())
+{
+    <p>No volunteers registered yet.</p>
+}
+else
+{
+    <table class="table table-striped">
+        <thead>
+            <tr>
+                <th>Name</th>
+                <th>Skills</th>
+                <th>Availability</th>
+                <th>Registered</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var v in Model)
+            {
+                <tr>
+                    <td>@v.FullName</td>
+                    <td>@v.Skills</td>
+                    <td>@v.Availability</td>
+                    <td>@v.DateRegistered.ToString("dd MMM yyyy")</td>
+                </tr>
+            }
+        </tbody>
+    </table>
+}

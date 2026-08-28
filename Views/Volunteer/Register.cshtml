@@ -1,0 +1,95 @@
+﻿@model GiftoftheGivers.Models.Volunteer
+@{
+    ViewData["Title"] = "Volunteer";
+    var justRegistered = TempData["VolunteerSuccess"] != null;
+}
+
+<div class="page active">
+    <div class="form-page">
+        @if (justRegistered)
+        {
+            <div class="form-container" style="max-width:520px;">
+                <div class="success-screen">
+                    <div class="success-icon"></div>
+                    <h2>Registration Complete!</h2>
+                    <p>Thank you for volunteering. We will contact you when there's a matching opportunity.</p>
+                    <a asp-action="Register" class="btn btn-accent">Register Another</a>
+                </div>
+            </div>
+        }
+        else
+        {
+            <div class="form-container" style="max-width:520px;">
+                <h2>Volunteer Registration</h2>
+                <p class="form-sub">Register your interest to help. We'll match your skills to current relief needs.</p>
+
+                <form asp-action="Register" method="post">
+                    <div asp-validation-summary="ModelOnly" class="text-danger" style="margin-bottom:12px;"></div>
+
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label asp-for="FirstName"></label>
+                            <input asp-for="FirstName" placeholder="First name" />
+                            <span asp-validation-for="FirstName" class="text-danger"></span>
+                        </div>
+                        <div class="form-group">
+                            <label asp-for="LastName"></label>
+                            <input asp-for="LastName" placeholder="Last name" />
+                            <span asp-validation-for="LastName" class="text-danger"></span>
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label asp-for="Email">Email Address</label>
+                        <input asp-for="Email" placeholder="you@email.com" />
+                        <span asp-validation-for="Email" class="text-danger"></span>
+                    </div>
+
+                    <div class="form-group">
+                        <label asp-for="Phone"></label>
+                        <input asp-for="Phone" placeholder="072 000 0000" />
+                    </div>
+
+                    <div class="form-group">
+                        <label>Skills (select all that apply)</label>
+                        <div style="display:grid; grid-template-columns: 1fr 1fr; gap:8px; margin-top:6px;">
+                            @{
+                                var skillOptions = new[] { "First Aid", "Logistics", "Food Distribution", "Administration", "IT Support", "Medical", "Construction", "Counselling" };
+                            }
+                            @foreach (var skill in skillOptions)
+                            {
+                                <label style="font-size:13px; display:flex; align-items:center; gap:6px;">
+                                    <input type="checkbox" name="skillCheckboxes" value="@skill" /> @skill
+                                </label>
+                            }
+                        </div>
+                        <span asp-validation-for="Skills" class="text-danger"></span>
+                    </div>
+
+                    <div class="form-group">
+                        <label asp-for="Availability"></label>
+                        <select asp-for="Availability">
+                            <option value="">Select availability</option>
+                            <option value="weekdays">Weekdays only</option>
+                            <option value="weekends">Weekends only</option>
+                            <option value="both">Weekdays &amp; Weekends</option>
+                            <option value="emergency">Emergency deployment (any time)</option>
+                        </select>
+                        <span asp-validation-for="Availability" class="text-danger"></span>
+                    </div>
+
+                    <div class="form-group">
+                        <label asp-for="Notes">Additional Notes</label>
+                        <textarea asp-for="Notes" placeholder="Any additional information"></textarea>
+                    </div>
+
+                    <button type="submit" class="form-submit">Register as Volunteer</button>
+                </form>
+            </div>
+        }
+    </div>
+</div>
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+}
