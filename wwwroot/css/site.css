@@ -129,17 +129,23 @@ a {
         }
 
 .nav-btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
     padding: 8px 18px;
     border-radius: var(--radius-sm);
     font-size: 14px;
     font-weight: 600;
     background: var(--primary);
-    color: oklch(98% 0.005 160);
+    color: white !important;
+    text-decoration: none !important;
     transition: all 0.15s var(--ease-out);
 }
 
     .nav-btn:hover {
         background: var(--primary-dark);
+        color: white !important;
+        text-decoration: none !important;
         transform: translateY(-1px);
     }
 
