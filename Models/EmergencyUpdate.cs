@@ -1,5 +1,5 @@
 using System;
-namespace GiftOfTheGivers.Models
+namespace GiftoftheGivers.Models
 {
     public class EmergencyUpdate
     {

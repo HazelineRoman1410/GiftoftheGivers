@@ -1,6 +1,6 @@
 using System;
 using System.Collections.Generic;
-namespace GiftOfTheGivers.Models
+namespace GiftoftheGivers.Models
 {
     public class ReliefProject
     {
